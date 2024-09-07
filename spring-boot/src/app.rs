@@ -9,6 +9,7 @@ use crate::{
 use anyhow::Context;
 use dashmap::DashMap;
 use std::any::Any;
+use std::collections::HashMap;
 use std::{
     any,
     collections::HashSet,
@@ -19,11 +20,12 @@ use std::{
 use toml::Table;
 
 pub type Registry<T> = DashMap<String, T>;
+pub type ReadonlyRegistry<T> = HashMap<String, T>;
 pub type Scheduler = dyn FnOnce(Arc<App>) -> Box<dyn Future<Output = Result<String>> + Send>;
 
 pub struct App {
     /// Component
-    components: Registry<ComponentRef>,
+    components: ReadonlyRegistry<ComponentRef>,
 }
 
 pub struct AppBuilder {
@@ -52,13 +54,12 @@ impl App {
         T: Any + Send + Sync,
     {
         let component_name = std::any::type_name::<T>();
-        let pair = self.components.get(component_name)?;
-        let component_ref = pair.value().clone();
-        component_ref.downcast::<T>()
+        let component_ref = self.components.get(component_name)?;
+        component_ref.clone().downcast::<T>()
     }
 
     pub fn get_components(&self) -> Vec<String> {
-        self.components.iter().map(|e| e.key().clone()).collect()
+        self.components.iter().map(|(key, _)| key.clone()).collect()
     }
 }
 
@@ -227,8 +228,14 @@ impl AppBuilder {
     }
 
     fn build_app(&mut self) -> Arc<App> {
-        let components = std::mem::take(&mut self.components);
-        Arc::new(App { components })
+        let dash_map = std::mem::take(&mut self.components);
+        let mut hash_map = HashMap::with_capacity(dash_map.len());
+        for entry in dash_map.iter() {
+            hash_map.insert(entry.key().clone(), entry.value().clone());
+        }
+        Arc::new(App {
+            components: hash_map,
+        })
     }
 }
 
