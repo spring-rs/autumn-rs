@@ -23,15 +23,15 @@ macro_rules! impl_known_status_error {
         )+
     ) => {
         impl KnownWebError {
-            pub fn new(status_code: StatusCode, msg: &str) -> Self {
+            pub fn new<S: Into<String>>(status_code: StatusCode, msg: S) -> Self {
                 Self {
                     status_code,
-                    msg: msg.to_string(),
+                    msg: msg.into(),
                 }
             }
         $(
             $(#[$docs])*
-            pub fn $lower_case(msg: &str) -> Self {
+            pub fn $lower_case<S: Into<String>>(msg: S) -> Self {
                 Self::new(StatusCode::$upper_case, msg)
             }
         )+
