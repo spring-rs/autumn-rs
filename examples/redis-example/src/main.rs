@@ -25,7 +25,7 @@ async fn list_redis_key(Component(mut redis): Component<Redis>) -> Result<impl I
     Ok(Json(keys))
 }
 
-#[get("/:key")]
+#[get("/{key}")]
 async fn get_content(
     Component(mut redis): Component<Redis>,
     Path(key): Path<String>,
@@ -34,7 +34,7 @@ async fn get_content(
     Ok(v)
 }
 
-#[post("/:key")]
+#[post("/{key}")]
 async fn set_content(
     Component(mut redis): Component<Redis>,
     Path(key): Path<String>,

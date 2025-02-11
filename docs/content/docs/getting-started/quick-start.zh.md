@@ -67,7 +67,7 @@ async fn hello_world() -> impl IntoResponse {
 }
 
 // 也可以使用route宏指定Http Method和请求路径。Path从HTTP请求中提取请求路径中的参数
-#[route("/hello/:name", method = "GET", method = "POST")]
+#[route("/hello/{name}", method = "GET", method = "POST")]
 async fn hello(Path(name): Path<String>) -> impl IntoResponse {
     format!("hello {name}")
 }

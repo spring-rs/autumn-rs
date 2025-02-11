@@ -16,7 +16,7 @@ serde_json = { workspace = true }
 jsonwebtoken = "8.3"
 pem = "3.0"
 lazy_static = "1.4"
-axum-extra = { version = "0.9", features = ["typed-header"] }
+axum-extra = { version = "0.10", features = ["typed-header"] }
 tracing = { workspace = true }
 
 # benchmark compare

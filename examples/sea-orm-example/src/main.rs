@@ -58,7 +58,7 @@ async fn get_todo_list(
     Ok(Json(rows))
 }
 
-#[get("/:id")]
+#[get("/{id}")]
 async fn get_todo_list_items(
     Component(db): Component<DbConn>,
     Path(id): Path<i32>,

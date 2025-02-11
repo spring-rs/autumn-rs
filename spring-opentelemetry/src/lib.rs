@@ -39,7 +39,6 @@ use opentelemetry_sdk::propagation::TraceContextPropagator;
 use opentelemetry_sdk::trace::{self as sdktrace, BatchConfig};
 use opentelemetry_sdk::{resource, runtime};
 use opentelemetry_semantic_conventions::attribute;
-use spring::async_trait;
 use spring::config::env::Env;
 use spring::plugin::component::ComponentRef;
 use spring::plugin::{ComponentRegistry, MutableComponentRegistry};
@@ -49,7 +48,6 @@ use tracing_opentelemetry::{MetricsLayer, OpenTelemetryLayer};
 
 pub struct OpenTelemetryPlugin;
 
-#[async_trait]
 impl Plugin for OpenTelemetryPlugin {
     fn immediately_build(&self, app: &mut AppBuilder) {
         let resource = Self::get_resource_attr(app.get_env());

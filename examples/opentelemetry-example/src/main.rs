@@ -49,7 +49,7 @@ async fn hello_world() -> impl IntoResponse {
 
 // You can also use the route macro to specify the Http Method and request path.
 // Path extracts parameters from the HTTP request path
-#[route("/hello/:name", method = "GET", method = "POST")]
+#[route("/hello/{name}", method = "GET", method = "POST")]
 async fn hello(Path(name): Path<String>) -> impl IntoResponse {
     info!("hello {name} called");
     format!("hello {name}")

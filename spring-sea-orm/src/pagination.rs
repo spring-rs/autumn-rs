@@ -23,7 +23,6 @@ mod web {
     use super::Pagination;
     use crate::config::SeaOrmWebConfig;
     use serde::Deserialize;
-    use spring::async_trait;
     use spring_web::axum::extract::rejection::QueryRejection;
     use spring_web::axum::extract::{FromRequestParts, Query};
     use spring_web::axum::http::request::Parts;
@@ -56,8 +55,7 @@ mod web {
         size: Option<u64>,
     }
 
-    #[async_trait]
-    impl<S> FromRequestParts<S> for Pagination {
+    impl<S> FromRequestParts<S> for Pagination where S: Sync {
         type Rejection = SeaOrmWebErr;
 
         async fn from_request_parts(

@@ -3,7 +3,7 @@ pub use axum::extract::*;
 use crate::error::{Result, WebError};
 use crate::AppState;
 use anyhow::Context;
-use axum::{async_trait, http::request::Parts};
+use axum::http::request::Parts;
 use spring::config::{ConfigRegistry, Configurable};
 use spring::plugin::ComponentRegistry;
 use std::ops::{Deref, DerefMut};
@@ -47,10 +47,10 @@ impl RequestPartsExt for Parts {
 /// Extract the components registered by the plugin from AppState
 pub struct Component<T: Clone>(pub T);
 
-#[async_trait]
 impl<T, S> FromRequestParts<S> for Component<T>
 where
     T: Clone + Send + Sync + 'static,
+    S: Sync
 {
     type Rejection = WebError;
 
@@ -77,10 +77,10 @@ pub struct Config<T>(pub T)
 where
     T: serde::de::DeserializeOwned + Configurable;
 
-#[async_trait]
 impl<T, S> FromRequestParts<S> for Config<T>
 where
     T: serde::de::DeserializeOwned + Configurable,
+    S: Sync
 {
     type Rejection = WebError;
 
